@@ -11,6 +11,8 @@
 
 int16_t but_up, but_left, but_right, but_down, but_switch, pos_y, pos_x;
 
+bool igra_gotova = false;
+
 typedef struct {
   int16_t buttons;
   int16_t joy_x;
@@ -28,6 +30,10 @@ void akcelerometar_setup();
 void akcelerometar_loop();
 void buzzer_vib_setup();
 void buzzer_vib_loop(int16_t but_left);
+void feedback();
+void uvodna_pjesma_setup();
+void spavanje_setup();
+void spavanje_loop(int16_t b_up, int16_t b_left, int16_t b_right, int16_t b_down, int16_t b_switch, int j_x, int j_y);
 
 extern int16_t global_tilt_x;
 extern int16_t global_tilt_y;
@@ -50,12 +56,13 @@ void setup() {
   pinMode(POSY_PIN, INPUT);
 
   Serial.begin(115200); 
-  delay(2000);
+  delay(1000);
 
+  uvodna_pjesma_setup();
   led_setup();
-  spavanje_setup();
   akcelerometar_setup();
-  buzzer_vib_setup();
+  buzzer_vib_setup(); 
+  spavanje_setup();
 }
 
 void loop() {
@@ -78,11 +85,19 @@ void loop() {
   joystick.joy_x = pos_x;
   joystick.joy_y = pos_y;
 
-  led_loop();
-  spavanje_loop();
+  spavanje_loop(but_up, but_left, but_right, but_down, but_switch, pos_x, pos_y);
+
   akcelerometar_loop();
   
   buzzer_vib_loop(but_left);
+
+  feedback();
+
+  if (igra_gotova == true) {
+    led_loop();
+  } else {
+    led_loop();
+  }
 
   joystick.tilt_x = global_tilt_x;
   joystick.tilt_y = global_tilt_y;

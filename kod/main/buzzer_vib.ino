@@ -1,15 +1,14 @@
+#ifndef BUZZER_PIN
 #define BUZZER_PIN 42
+#endif
+
+#ifndef VIBRATE_PIN
 #define VIBRATE_PIN 21
+#endif
 
 void buzzer_vib_setup() {
   pinMode(BUZZER_PIN, OUTPUT);
-  pinMode(VIBRATE_PIN, OUTPUT);
-
-  tone(BUZZER_PIN, 1000);
-  delay(300);      
-  noTone(BUZZER_PIN);
-  delay(300);
-  
+  pinMode(VIBRATE_PIN, OUTPUT);  
   for (int vibrateTime = 255; vibrateTime > 0; vibrateTime = vibrateTime - 1) {
     analogWrite(VIBRATE_PIN, vibrateTime);
     delay(20);
