@@ -22,6 +22,9 @@ typedef struct {
   int16_t tilt_z;
 } joystick_packet_t;
 
+joystick_packet_t joystick = {0};
+
+
 void setup() {
   // put your setup code here, to run once:
   pinMode(POSY_PIN, INPUT_PULLUP);
@@ -32,16 +35,22 @@ void setup() {
 
   pinMode(BUZZER_PIN, OUTPUT);
 
-  Serial.begin(9600); 
+  Serial.begin(115200); 
 }
 
 void loop() {
-  but_up = digitalRead(BUT_UP_PIN));
-  but_left = digitalRead(BUT_LEFT_PIN));
-  but_right = digitalRead(BUT_RIGHT_PIN));
-  but_down = digitalRead(BUT_DOWN_PIN));
+  but_up = 1-digitalRead(BUT_UP_PIN);
+  but_left = 1-digitalRead(BUT_LEFT_PIN);
+  but_right = 1-digitalRead(BUT_RIGHT_PIN);
+  but_down = 1-digitalRead(BUT_DOWN_PIN);
 
+  joystick.buttons = 0;
+  joystick.buttons |= (but_up ? 1 : 0) << 0;
+  joystick.buttons |= (but_right ? 1 : 0) << 1;
+  joystick.buttons |= (but_left ? 1 : 0) << 2;
+  joystick.buttons |= (but_down ? 1 : 0) << 3;
 
+  Serial.write((uint8_t*)&joystick, sizeof(joystick));
 
-  delay(1000);
+  delay(20);
 }
