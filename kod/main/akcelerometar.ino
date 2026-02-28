@@ -24,10 +24,15 @@ void akcelerometar_loop() {
   int32_t acc[3];
   lsm6ds3.getAcceleratorAxes(acc);
 
-  float kut_x = atan2(acc[0], acc[2]) * 57.295;
-  float kut_y = atan2(acc[1], acc[2]) * 57.295;
-  float kut_z = atan2(sqrt(acc[0]*acc[0] + acc[1]*acc[1]), acc[2]) * 57.295;
+  float ax = acc[0];
+  float ay = acc[1];
+  float az = acc[2];
 
+  float kut_x = atan2(ax, sqrt(ay * ay + az * az)) * 57.295; 
+  float kut_y = atan2(ay, sqrt(ax * ax + az * az)) * 57.295; 
+  float kut_z = atan2(sqrt(ax * ax + ay * ay), az) * 57.295;
+
+  // Osjetljivost: 35 stupnjeva nagiba daje maksimalan broj (100) u igrici
   int limit_stupnjeva = 35; 
 
   global_tilt_x = map(constrain((int)kut_x, -limit_stupnjeva, limit_stupnjeva), -limit_stupnjeva, limit_stupnjeva, -100, 100);

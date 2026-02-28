@@ -8,7 +8,6 @@
 #define BUT_LEFT_PIN 39
 #define BUT_RIGHT_PIN 40
 #define BUT_DOWN_PIN 14
-#define BUZZER_PIN 42
 
 int16_t but_up, but_left, but_right, but_down, but_switch, pos_y, pos_x;
 
@@ -27,6 +26,8 @@ void led_setup();
 void led_loop();
 void akcelerometar_setup();
 void akcelerometar_loop();
+void buzzer_vib_setup();
+void buzzer_vib_loop(int16_t but_left);
 
 extern int16_t global_tilt_x;
 extern int16_t global_tilt_y;
@@ -47,13 +48,13 @@ void setup() {
 
   pinMode(POSX_PIN, INPUT);
   pinMode(POSY_PIN, INPUT);
-  pinMode(BUZZER_PIN, OUTPUT);
 
   Serial.begin(115200); 
   delay(2000);
 
   led_setup();
   akcelerometar_setup();
+  buzzer_vib_setup();
 }
 
 void loop() {
@@ -78,6 +79,8 @@ void loop() {
 
   led_loop();
   akcelerometar_loop();
+  
+  buzzer_vib_loop(but_left);
 
   joystick.tilt_x = global_tilt_x;
   joystick.tilt_y = global_tilt_y;
