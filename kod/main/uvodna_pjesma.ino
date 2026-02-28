@@ -10,7 +10,6 @@
 
 int tempo = 200; 
 
-// DODANA TOČKA SA ZAREZOM NA KRAJU OVE LINIJE
 int melody[] = {
   NOTE_E4,4,  NOTE_E4,4,  NOTE_F4,4,  NOTE_G4,4,
   NOTE_G4,4,  NOTE_F4,4,  NOTE_E4,4,  NOTE_D4,4,
@@ -37,10 +36,9 @@ void uvodna_pjesma_setup() {
     tone(BUZZER_PIN, melody[thisNote], noteDuration*0.9);
     delay(noteDuration);
     noTone(BUZZER_PIN);
+    led_loop();
   }
 }
-
-// OBRISANA VIŠKA VITIČASTA ZAGRADA KOJA JE BILA OVDJE
 
 void uvodna_pjesma_loop() {
   

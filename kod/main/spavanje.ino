@@ -12,13 +12,15 @@ extern CRGB led[];
 #define BUT_DOWN_PIN 14
 #endif
 
+
+void led_setup();
+void led_loop();
+
 unsigned long zadnja_aktivnost_millis = 0;
 
 void spavanje_setup() {
   pinMode(BUT_DOWN_PIN, INPUT_PULLUP);
 
-  // ESP-IDF definicija za budenje preko GPIO pina na ESP32-S3
-  // Buduci da tipka koristi INPUT_PULLUP, okida se na LOW level
   gpio_wakeup_enable((gpio_num_t)BUT_DOWN_PIN, GPIO_INTR_LOW_LEVEL);
   esp_sleep_enable_gpio_wakeup();
 
@@ -32,13 +34,10 @@ void spavanje_loop(int16_t b_up, int16_t b_left, int16_t b_right, int16_t b_down
   }
 
   if (millis() - zadnja_aktivnost_millis >= 30000) {
-    
-    // --- ODLAYAK U HARDVERSKI SLEEP ---
-    // Gasi LEDicu
     led[0] = CRGB::Black;
     FastLED.show();
 
-    // Zvuk: "Laku noc"
+    // Zvuk: gašenje
     tone(BUZZER_PIN, 400, 200);
     delay(250);
     tone(BUZZER_PIN, 300, 250);
@@ -47,21 +46,16 @@ void spavanje_loop(int16_t b_up, int16_t b_left, int16_t b_right, int16_t b_down
     delay(450);
     noTone(BUZZER_PIN);
 
-    // Hardverski Sleep poziv (pauzira mikrokontroler dok netko ne stisne tipku 4)
     esp_light_sleep_start();
 
-    // --- BUDENJE (Nakon sto korisnik stisne Button 4) ---
-    
-    // Resetiramo timer kako ne bi opet odmah zaspao
     zadnja_aktivnost_millis = millis();
 
-    // Resetiraj I2C i Serijski port kako bi komunikacija s igrom i akcelerometrom nastavila raditi
     Serial.end();
     delay(10);
     Serial.begin(115200);
     Wire.begin(); 
 
-    // Zvuk: "Dobro jutro"
+    // Zvuk: paljenje
     tone(BUZZER_PIN, 800, 100);
     delay(150);
     tone(BUZZER_PIN, 1200, 100);
@@ -69,5 +63,7 @@ void spavanje_loop(int16_t b_up, int16_t b_left, int16_t b_right, int16_t b_down
     tone(BUZZER_PIN, 1600, 200);
     delay(200);
     noTone(BUZZER_PIN);
+
+    led_loop();
   }
 }

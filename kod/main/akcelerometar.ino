@@ -32,7 +32,7 @@ void akcelerometar_loop() {
   float kut_y = atan2(ay, sqrt(ax * ax + az * az)) * 57.295; 
   float kut_z = atan2(sqrt(ax * ax + ay * ay), az) * 57.295;
 
-  // Osjetljivost: 35 stupnjeva nagiba daje maksimalan broj (100) u igrici
+  // Osjetljivost: 35 stupnjeva nagiba daje maksimalan broj (100) u igri
   int limit_stupnjeva = 35; 
 
   global_tilt_x = map(constrain((int)kut_x, -limit_stupnjeva, limit_stupnjeva), -limit_stupnjeva, limit_stupnjeva, -100, 100);

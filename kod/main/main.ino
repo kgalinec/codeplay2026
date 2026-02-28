@@ -39,7 +39,7 @@ extern int16_t global_tilt_x;
 extern int16_t global_tilt_y;
 extern int16_t global_tilt_z;
 
-int fix_stick(int data) {
+int gljivica(int data) {
   int val = (data * 200 / 4095) - 100;
   if (abs(val) < 4) return 0;
   return val;
@@ -56,24 +56,26 @@ void setup() {
   pinMode(POSY_PIN, INPUT);
 
   Serial.begin(115200); 
-  delay(1000);
+  delay(500);
 
-  uvodna_pjesma_setup();
   led_setup();
+  led_loop();
+  uvodna_pjesma_setup();
   akcelerometar_setup();
   buzzer_vib_setup(); 
   spavanje_setup();
 }
 
 void loop() {
+  led_loop();
   but_up = 1-digitalRead(BUT_UP_PIN);
   but_left = 1-digitalRead(BUT_LEFT_PIN);
   but_right = 1-digitalRead(BUT_RIGHT_PIN);
   but_down = 1-digitalRead(BUT_DOWN_PIN);
   but_switch = 1-digitalRead(SWITCH_PIN);
 
-  pos_x = fix_stick(analogRead(POSX_PIN));
-  pos_y = fix_stick(analogRead(POSY_PIN));
+  pos_x = gljivica(analogRead(POSX_PIN));
+  pos_y = gljivica(analogRead(POSY_PIN));
 
   joystick.buttons = 0;
   joystick.buttons |= (but_up ? 1 : 0) << 0;
@@ -92,12 +94,7 @@ void loop() {
   buzzer_vib_loop(but_left);
 
   feedback();
-
-  if (igra_gotova == true) {
-    led_loop();
-  } else {
-    led_loop();
-  }
+  
 
   joystick.tilt_x = global_tilt_x;
   joystick.tilt_y = global_tilt_y;

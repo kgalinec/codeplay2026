@@ -7,7 +7,7 @@ uint8_t hue = 0;
 
 void led_setup() {
   FastLED.addLeds<WS2812, LED_PIN>(led, 1);
-  FastLED.setBrightness(255);
+  FastLED.setBrightness(200);
 }
 
 void led_loop() {
