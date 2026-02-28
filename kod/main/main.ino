@@ -53,6 +53,7 @@ void setup() {
   delay(2000);
 
   led_setup();
+  spavanje_setup();
   akcelerometar_setup();
   buzzer_vib_setup();
 }
@@ -78,6 +79,7 @@ void loop() {
   joystick.joy_y = pos_y;
 
   led_loop();
+  spavanje_loop();
   akcelerometar_loop();
   
   buzzer_vib_loop(but_left);
